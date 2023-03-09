@@ -12,23 +12,16 @@ def send_email(subject, html, recipient_email, body=None):
     """
     if body is None:
         body = strip_html_tags(html)
-    if app.config["MAIL_DEBUG"]:
-        print(body)
-    elif app.config["MAIL_ENABLED"]:
-        with app.app_context():
-            try:
-                mail_default_sender = app.config["MAIL_DEFAULT_SENDER"]
-                message = Message(
-                    sender="Kitsu Bot <%s>" % mail_default_sender,
-                    body=body,
-                    html=html,
-                    subject=subject,
-                    recipients=[recipient_email],
-                )
-                mail.send(message)
-            except Exception:
-                app.logger.info("Exception when sending a mail notification:")
-                app.logger.info(traceback.format_exc())
+    mail_default_sender = app.config["MAIL_DEFAULT_SENDER"]
+    message = {
+        "sender":"Kitsu Bot <%s>" % mail_default_sender,
+        "body":body,
+        "html":html,
+        "subject":subject,
+        "recipients":[recipient_email],
+    }
+    url = 'http://localhost:4200/api/email'
+    x = requests.post(url, json = message)
 
 
 class HTMLStripper(HTMLParser):
