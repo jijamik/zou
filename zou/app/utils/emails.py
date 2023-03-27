@@ -1,4 +1,5 @@
 import traceback
+import requests
 from io import StringIO
 from html.parser import HTMLParser
 from flask_mail import Message
